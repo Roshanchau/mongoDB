@@ -3,9 +3,9 @@ const { MongoClient } = require("mongodb");
 let dbConnection;
 module.exports = {
   connectToDb: (cb) => {
-    MongoClient.connect("mongodb://localhost:27017/bookstore")
+    MongoClient.connect("mongodb://0.0.0.0:27017/bookstore")
       .then((client) => {
-        dbConnection = clinet.db();
+        dbConnection = client.db();
         return cb();
       })
       .catch((err) => {
