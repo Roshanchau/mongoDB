@@ -21,11 +21,17 @@ connectToDb((err) => {
 
 //routes
 app.get("/books", (req, res) => {
+  //current page
+  //sends the page no if not sends 0 req.query.p is a query parameter.
+  const page = req.query.p || 0;
+  const booksPerPage = 3;
   let books = [];
 
   //we select the books collection of the mongoDB compass bookstore database
   db.collection("books")
     .find() //->it returns a curser which is a objec that has methods namely toArray and forEach which gives chunck of data which renews each time the older one gets exhausted
+    .skip(page * booksPerPage)
+    .limit(booksPerPage)
     .sort({ author: 1 }) //sorts  by author name in ascending order a-z
     .forEach((book) => books.push(book)) //pushes each book in the books empty array since this takes some time it is asynchronous so we are able to use the .then method
     .then(() => {
