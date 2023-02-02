@@ -1,5 +1,6 @@
 const express = require("express");
 const { connectToDb, getDb } = require("./db");
+const { ObjectId } = require("mongodb");
 
 //init app & middleware
 
@@ -34,4 +35,19 @@ app.get("/books", (req, res) => {
     });
 
   // res.json({ mssg: "connected to the api" });
+});
+
+app.get("/books/:id", (req, res) => {
+  if (ObjectId.isValid(req.params.id)) {
+    db.collection("books")
+      .findOne({ _id: ObjectId(req.params.id) })
+      .then((doc) => {
+        res.status(200).json(doc);
+      })
+      .catch((err) => {
+        res.status(500).json({ error: "couldnot fetch the document" });
+      });
+  } else {
+    res.status(500).json({ error: "Not a vlid doc id" });
+  }
 });
