@@ -6,6 +6,7 @@ const { ObjectId } = require("mongodb");
 
 const app = express();
 
+app.use(express.json());
 //db connection
 //connect to db takes a call back function as an arguement.
 let db;
@@ -50,4 +51,17 @@ app.get("/books/:id", (req, res) => {
   } else {
     res.status(500).json({ error: "Not a vlid doc id" });
   }
+});
+
+app.post("/books", (req, res) => {
+  const book = req.body;
+
+  db.collection("books")
+    .insertOne(book)
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ err: "could not create a new document." });
+    });
 });
